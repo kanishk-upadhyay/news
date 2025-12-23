@@ -39,9 +39,9 @@ function Navbar() {
             className="md:hidden flex flex-col gap-1 p-2"
             aria-label="Toggle menu"
           >
-            <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
-            <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-            <span className={`block w-6 h-0.5 bg-gray-800 transition-all ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
+            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? 'opacity-0' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
+            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
           </button>
         </div>
 
