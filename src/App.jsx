@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import NewsFeed from "./pages/NewsFeed";
 import { NEWS_CONFIG } from "./constants";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="surface min-h-screen">
         <Navbar />
         <Routes>
@@ -18,7 +18,7 @@ function App() {
           <Route path="/category/:category" element={<NewsFeed />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
