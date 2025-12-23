@@ -5,10 +5,6 @@ import { CATEGORIES } from "../constants";
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   return (
     <nav className="surface-container elevation-1">
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -35,13 +31,13 @@ function Navbar() {
 
           {/* Mobile Hamburger Button */}
           <button
-            onClick={toggleMobileMenu}
-            className="md:hidden flex flex-col gap-1 p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden flex flex-col gap-1 p-2 on-surface"
             aria-label="Toggle menu"
           >
-            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
-            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? 'opacity-0' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
-            <span className={`block w-6 h-0.5 on-surface transition-all ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} style={{ backgroundColor: 'currentColor' }}></span>
+            <span className={`block w-6 h-0.5 transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} style={{ backgroundColor: '#1d1b20' }}></span>
+            <span className={`block w-6 h-0.5 transition-all ${isMobileMenuOpen ? 'opacity-0' : ''}`} style={{ backgroundColor: '#1d1b20' }}></span>
+            <span className={`block w-6 h-0.5 transition-all ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} style={{ backgroundColor: '#1d1b20' }}></span>
           </button>
         </div>
 
