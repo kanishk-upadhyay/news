@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family:
+            "Roboto",
+            system-ui,
+            -apple-system,
+            sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer utilities {
+    /* Elevation Shadows */
+    .elevation-0 {
+        box-shadow: none;
+    }
+
+    .elevation-1 {
+        box-shadow:
+            0px 1px 2px rgba(0, 0, 0, 0.3),
+            0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    }
+
+    .elevation-2 {
+        box-shadow:
+            0px 1px 2px rgba(0, 0, 0, 0.3),
+            0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .elevation-3 {
+        box-shadow:
+            0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+            0px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .elevation-4 {
+        box-shadow:
+            0px 6px 10px 4px rgba(0, 0, 0, 0.15),
+            0px 2px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Shapes - Rounded */
+    .shape-sm {
+        border-radius: 12px;
+    }
+
+    .shape-md {
+        border-radius: 16px;
+    }
+
+    .shape-lg {
+        border-radius: 24px;
+    }
+
+    .shape-xl {
+        border-radius: 28px;
+    }
+
+    /* Color Tokens */
+    .surface {
+        background-color: #fef7ff;
+    }
+
+    .surface-container {
+        background-color: #f6edff;
+    }
+
+    .surface-container-high {
+        background-color: #ece6f0;
+    }
+
+    .primary {
+        background-color: #6750a4;
+        color: #ffffff;
+    }
+
+    .primary-container {
+        background-color: #e8def8;
+        color: #21005d;
+    }
+
+    .on-surface {
+        color: #1d1b20;
+    }
+
+    .on-surface-variant {
+        color: #49454f;
+    }
+
+    .outline {
+        border-color: #79747e;
+    }
+
+    .outline-variant {
+        border-color: #cac4d0;
+    }
+}

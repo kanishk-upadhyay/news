@@ -1,0 +1,6 @@
+export const containerStyles = "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+export const cardGridStyles = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+export const headingStyles = "text-5xl font-bold on-surface capitalize mb-3"
+export const subheadingStyles = "on-surface-variant text-lg"
+export const emptyStateStyles = "surface-container shape-xl p-16 text-center elevation-1"
+export const emptyStateTextStyles = "text-2xl on-surface-variant font-medium"
