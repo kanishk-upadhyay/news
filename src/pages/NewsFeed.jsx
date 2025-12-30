@@ -14,7 +14,7 @@ import {
 } from "../utils/styles";
 
 function NewsFeed() {
-  const { category } = useParams();
+  const { category = NEWS_CONFIG.DEFAULT_CATEGORY } = useParams();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ function NewsFeed() {
   useEffect(() => {
     let isMounted = true;
 
-    fetchNews(category || NEWS_CONFIG.DEFAULT_CATEGORY)
+    fetchNews(category)
       .then((data) => {
         if (isMounted) {
           setArticles(data);
@@ -43,12 +43,10 @@ function NewsFeed() {
   }, [category]);
 
   return (
-    <div className="surface min-h-screen py-8">
+    <div className="surface min-h-screen py-4 sm:py-6 lg:py-8">
       <div className={containerStyles}>
-        <div className="mb-10">
-          <h1 className={headingStyles}>
-            {category || NEWS_CONFIG.DEFAULT_CATEGORY}
-          </h1>
+        <div className="mb-6 sm:mb-8 lg:mb-10">
+          <h1 className={headingStyles}>{category}</h1>
           <p className={subheadingStyles}>Latest news</p>
         </div>
 
@@ -60,19 +58,19 @@ function NewsFeed() {
           </div>
         )}
 
-        {!loading && !error && articles.length > 0 && (
-          <div className={cardGridStyles}>
-            {articles.map((article, index) => (
-              <NewsCard key={index} article={article} />
-            ))}
-          </div>
-        )}
-
-        {!loading && !error && articles.length === 0 && (
-          <div className={emptyStateStyles}>
-            <p className={emptyStateTextStyles}>No articles found</p>
-          </div>
-        )}
+        {!loading &&
+          !error &&
+          (articles.length > 0 ? (
+            <div className={cardGridStyles}>
+              {articles.map((article, index) => (
+                <NewsCard key={index} article={article} />
+              ))}
+            </div>
+          ) : (
+            <div className={emptyStateStyles}>
+              <p className={emptyStateTextStyles}>No articles found</p>
+            </div>
+          ))}
       </div>
     </div>
   );
