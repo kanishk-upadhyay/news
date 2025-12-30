@@ -1,17 +1,23 @@
+import { decodeHTML, cleanDescription } from "../utils/textUtils";
+
 function NewsCard({ article }) {
+  const title = decodeHTML(article.webTitle);
+  const rawDescription = decodeHTML(article.fields?.trailText);
+  const description = cleanDescription(title, rawDescription);
+
   return (
     <div className="surface elevation-1 hover:elevation-3 shape-lg overflow-hidden transition-all flex flex-col">
       <img
         src={article.fields?.thumbnail || "https://via.placeholder.com/400x200"}
-        alt={article.webTitle}
+        alt={title}
         className="w-full h-40 sm:h-48 md:h-52 object-cover"
       />
       <div className="p-4 sm:p-5 md:p-6 flex flex-col grow">
         <h2 className="text-lg sm:text-xl font-bold on-surface mb-2 sm:mb-3 line-clamp-2">
-          {article.webTitle}
+          {title}
         </h2>
         <p className="on-surface-variant text-sm mb-4 sm:mb-6 line-clamp-3 grow">
-          {article.fields?.trailText || "No description available"}
+          {description || "No description available"}
         </p>
         <a
           href={article.webUrl}

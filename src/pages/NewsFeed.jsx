@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchNews } from "../api/NewsApi";
 import NewsCard from "../components/NewsCard";
-import LoadingMessage from "../components/LoadingMessage";
+import SkeletonCard from "../components/SkeletonCard";
 import { NEWS_CONFIG } from "../constants";
 import {
   containerStyles,
   cardGridStyles,
   headingStyles,
-  subheadingStyles,
   emptyStateStyles,
   emptyStateTextStyles,
 } from "../utils/styles";
@@ -45,12 +44,15 @@ function NewsFeed() {
   return (
     <div className="surface min-h-screen py-4 sm:py-6 lg:py-8">
       <div className={containerStyles}>
-        <div className="mb-6 sm:mb-8 lg:mb-10">
-          <h1 className={headingStyles}>{category}</h1>
-          <p className={subheadingStyles}>Latest news</p>
-        </div>
+        <h1 className={headingStyles}>{category}</h1>
 
-        {loading && <LoadingMessage />}
+        {loading && (
+          <div className={cardGridStyles}>
+            {[...Array(9)].map((_, index) => (
+              <SkeletonCard key={index} />
+            ))}
+          </div>
+        )}
 
         {error && (
           <div className={emptyStateStyles}>
