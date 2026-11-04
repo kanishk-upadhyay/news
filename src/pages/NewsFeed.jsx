@@ -18,27 +18,32 @@ function NewsFeed() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  const loadCategoryNews = () => {
+    setLoading(true);
+    setError(null);
 
     fetchNews(category)
       .then((data) => {
-        if (isMounted) {
-          setArticles(data);
-          setLoading(false);
-        }
+        setArticles(data || []);
+        setLoading(false);
       })
-      .catch((error) => {
-        if (isMounted) {
-          console.error("Failed to fetch news:", error);
-          setError(error.message || "Failed to load articles");
-          setLoading(false);
-        }
-      });
+      .catch((err) => {
+        console.error("Failed to fetch news:", err);
+        const isRateLimit =
+          err.response?.status === 429 ||
+          String(err.message).includes("429");
 
-    return () => {
-      isMounted = false;
-    };
+        const msg = isRateLimit
+          ? "The Guardian test API rate limit was reached (1 request/second). Please wait a moment."
+          : err.message || "Failed to load articles";
+
+        setError(msg);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadCategoryNews();
   }, [category]);
 
   return (
@@ -54,9 +59,16 @@ function NewsFeed() {
           </div>
         )}
 
-        {error && (
+        {!loading && error && (
           <div className={emptyStateStyles}>
-            <p className={emptyStateTextStyles}>Error: {error}</p>
+            <p className={emptyStateTextStyles}>{error}</p>
+            <button
+              type="button"
+              onClick={loadCategoryNews}
+              className="mt-4 px-5 py-2.5 primary shape-md font-semibold text-sm hover:elevation-2 transition-all cursor-pointer"
+            >
+              Try Again
+            </button>
           </div>
         )}
 
@@ -65,7 +77,7 @@ function NewsFeed() {
           (articles.length > 0 ? (
             <div className={cardGridStyles}>
               {articles.map((article, index) => (
-                <NewsCard key={index} article={article} />
+                <NewsCard key={article.id || index} article={article} />
               ))}
             </div>
           ) : (

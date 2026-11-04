@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NEWS_CONFIG } from "../constants";
 
-const API_KEY = "test";
+const API_KEY = import.meta.env.VITE_GUARDIAN_API_KEY || "test";
 
 export const fetchNews = (category) => {
   const url = "https://content.guardianapis.com/search";
