@@ -1,8 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AppContext } from "./appContextDef";
 
+/**
+ * Sanitizes article object to keep localStorage footprint minimal (<1KB per bookmark)
+ */
+const sanitizeBookmark = (article) => {
+  if (!article) return null;
+  return {
+    id: article.id || article.webUrl,
+    webTitle: article.webTitle || "Untitled Article",
+    webUrl: article.webUrl || "#",
+    webPublicationDate: article.webPublicationDate || new Date().toISOString(),
+    sectionName: article.sectionName || "News",
+    fields: {
+      thumbnail: article.fields?.thumbnail || "",
+      trailText: article.fields?.trailText || "",
+      byline: article.fields?.byline || "",
+      wordcount: article.fields?.wordcount || 0,
+      shortUrl: article.fields?.shortUrl || "",
+    },
+  };
+};
+
 export const AppProvider = ({ children }) => {
-  // Theme state ('dark', 'light', 'system')
+  // Theme state ('dark' | 'light' | 'system')
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("newshub_theme") || "dark";
   });
@@ -11,11 +32,17 @@ export const AppProvider = ({ children }) => {
   const [bookmarks, setBookmarks] = useState(() => {
     try {
       const stored = localStorage.getItem("newshub_bookmarks");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
+      if (!stored) return [];
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.warn("Failed to read bookmarks from localStorage", e);
       return [];
     }
   });
+
+  // Toast feedback state
+  const [toast, setToast] = useState(null);
 
   // Reader Drawer active article
   const [activeArticle, setActiveArticle] = useState(null);
@@ -44,7 +71,7 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("newshub_theme", theme);
   }, [theme]);
 
-  // Sync bookmarks with localStorage
+  // Sync bookmarks with localStorage whenever bookmarks change
   useEffect(() => {
     try {
       localStorage.setItem("newshub_bookmarks", JSON.stringify(bookmarks));
@@ -53,35 +80,71 @@ export const AppProvider = ({ children }) => {
     }
   }, [bookmarks]);
 
-  // Sync viewMode with localStorage
+  // Toast auto-dismiss timer
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const showToast = useCallback((message, type = "info") => {
+    setToast({ message, type, id: Date.now() });
+  }, []);
+
   const updateViewMode = (mode) => {
     setViewMode(mode);
     localStorage.setItem("newshub_view_mode", mode);
   };
 
-  const isBookmarked = (id) => {
-    return bookmarks.some((b) => (b.id || b.webUrl) === id);
-  };
+  const isBookmarked = useCallback(
+    (articleOrId) => {
+      if (!articleOrId) return false;
+      const targetId =
+        typeof articleOrId === "string"
+          ? articleOrId
+          : articleOrId.id || articleOrId.webUrl;
+      return bookmarks.some((b) => (b.id || b.webUrl) === targetId);
+    },
+    [bookmarks]
+  );
 
-  const toggleBookmark = (article) => {
-    const id = article.id || article.webUrl;
-    setBookmarks((prev) => {
-      const exists = prev.some((b) => (b.id || b.webUrl) !== id);
+  const toggleBookmark = useCallback(
+    (article) => {
+      if (!article) return false;
+      const id = article.id || article.webUrl;
+      const exists = bookmarks.some((b) => (b.id || b.webUrl) === id);
+
       if (exists) {
-        return prev.filter((b) => (b.id || b.webUrl) !== id);
+        setBookmarks((prev) => prev.filter((b) => (b.id || b.webUrl) !== id));
+        showToast("Removed from saved stories", "info");
+        return false;
       } else {
-        return [article, ...prev];
+        const clean = sanitizeBookmark(article);
+        if (clean) {
+          setBookmarks((prev) => [clean, ...prev]);
+          showToast("Saved to your reading list", "success");
+          return true;
+        }
+        return false;
       }
-    });
-  };
+    },
+    [bookmarks, showToast]
+  );
 
-  const removeBookmark = (id) => {
-    setBookmarks((prev) => prev.filter((b) => (b.id || b.webUrl) !== id));
-  };
+  const removeBookmark = useCallback(
+    (id) => {
+      setBookmarks((prev) => prev.filter((b) => (b.id || b.webUrl) !== id));
+      showToast("Removed from saved stories", "info");
+    },
+    [showToast]
+  );
 
-  const clearBookmarks = () => {
+  const clearBookmarks = useCallback(() => {
     setBookmarks([]);
-  };
+    showToast("Cleared all saved bookmarks", "info");
+  }, [showToast]);
 
   const openReader = (article) => {
     setActiveArticle(article);
@@ -107,6 +170,8 @@ export const AppProvider = ({ children }) => {
         toggleBookmark,
         removeBookmark,
         clearBookmarks,
+        toast,
+        showToast,
         activeArticle,
         openReader,
         closeReader,

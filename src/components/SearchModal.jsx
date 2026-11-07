@@ -13,7 +13,7 @@ const QUICK_TOPICS = [
 ];
 
 export default function SearchModal() {
-  const { isSearchOpen, openSearch, closeSearch, openReader } = useApp();
+  const { isSearchOpen, openSearch, closeSearch, openReader, isBookmarked, toggleBookmark } = useApp();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ export default function SearchModal() {
 
     const timer = setTimeout(() => {
       setLoading(true);
-      fetchNews({ query: trimmed, category: "all", pageSize: 10 })
+      fetchNews({ query: trimmed, category: "all", pageSize: 12 })
         .then((data) => {
           setResults(data.results || []);
           setSearched(true);
@@ -115,6 +115,7 @@ export default function SearchModal() {
           />
           {query && (
             <button
+              type="button"
               onClick={() => {
                 setQuery("");
                 setResults([]);
@@ -143,6 +144,7 @@ export default function SearchModal() {
               {QUICK_TOPICS.map((topic) => (
                 <button
                   key={topic}
+                  type="button"
                   onClick={() => setQuery(topic)}
                   className="px-3 py-1.5 rounded-full text-xs font-medium bg-card border border-divider hover:border-rose-500 hover:text-rose-500 transition-colors cursor-pointer"
                 >
@@ -172,6 +174,8 @@ export default function SearchModal() {
           {!loading &&
             results.map((article) => {
               const title = decodeHTML(article.webTitle);
+              const bookmarked = isBookmarked(article);
+
               return (
                 <div
                   key={article.id}
@@ -194,13 +198,42 @@ export default function SearchModal() {
                       {title}
                     </h4>
                   </div>
-                  {article.fields?.thumbnail && (
-                    <img
-                      src={article.fields.thumbnail}
-                      alt=""
-                      className="w-16 h-12 object-cover rounded-lg shrink-0 border border-divider"
-                    />
-                  )}
+
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    {/* Direct Bookmark button in search results */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleBookmark(article);
+                      }}
+                      className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                        bookmarked
+                          ? "bg-rose-500 text-white border-rose-500"
+                          : "bg-card border-divider text-on-surface-muted hover:text-on-surface"
+                      }`}
+                      title={bookmarked ? "Remove Bookmark" : "Save for later"}
+                      aria-label="Bookmark article"
+                    >
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill={bookmarked ? "currentColor" : "none"}
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                      </svg>
+                    </button>
+
+                    {article.fields?.thumbnail && (
+                      <img
+                        src={article.fields.thumbnail}
+                        alt=""
+                        className="w-16 h-12 object-cover rounded-lg shrink-0 border border-divider"
+                      />
+                    )}
+                  </div>
                 </div>
               );
             })}

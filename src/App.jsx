@@ -1,16 +1,29 @@
-import { HashRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { AppProvider } from "./context/AppContext";
 import BreakingTicker from "./components/BreakingTicker";
 import Navbar from "./components/Navbar";
 import SearchModal from "./components/SearchModal";
 import ReaderDrawer from "./components/ReaderDrawer";
+import Toast from "./components/Toast";
 import NewsFeed from "./pages/NewsFeed";
 import Bookmarks from "./pages/Bookmarks";
 import { NEWS_CONFIG, CATEGORIES } from "./constants";
 
+// Scroll to top on every route transition
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+  return null;
+}
+
 function AppContent() {
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
+
       {/* Top Breaking Marquee Ticker */}
       <BreakingTicker />
 
@@ -33,6 +46,7 @@ function AppContent() {
       {/* Global Interactive Overlays */}
       <SearchModal />
       <ReaderDrawer />
+      <Toast />
 
       {/* Editorial Footer */}
       <footer className="bg-card border-t border-divider mt-auto py-12 transition-colors">

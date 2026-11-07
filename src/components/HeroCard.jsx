@@ -14,13 +14,22 @@ export default function HeroCard({ article }) {
   const byline = article.fields?.byline;
   const timeAgo = formatRelativeTime(article.webPublicationDate);
   const readTime = calculateReadTime(article.fields?.wordcount || description);
-  const bookmarked = isBookmarked(article.id || article.webUrl);
+  const bookmarked = isBookmarked(article);
+
+  const handleBookmarkClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleBookmark(article);
+  };
 
   return (
     <section className="group relative bg-card border border-divider rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 mb-8 sm:mb-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
         {/* Visual Cover */}
-        <div className="lg:col-span-7 relative h-64 sm:h-80 lg:h-auto min-h-[320px] overflow-hidden bg-card-subtle">
+        <div
+          onClick={() => openReader(article)}
+          className="lg:col-span-7 relative h-64 sm:h-80 lg:h-auto min-h-[320px] overflow-hidden bg-card-subtle cursor-pointer"
+        >
           <img
             src={article.fields?.thumbnail || FALLBACK_THUMBNAIL}
             alt={title}
@@ -45,7 +54,7 @@ export default function HeroCard({ article }) {
         {/* Content Section */}
         <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
           <div>
-            {/* Meta tags: Section + Time + Read duration */}
+            {/* Meta tags */}
             <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono text-on-surface-muted mb-3 flex-wrap">
               <span className="font-semibold uppercase tracking-wider text-rose-500">
                 {article.sectionName}
@@ -83,22 +92,30 @@ export default function HeroCard({ article }) {
             <div className="flex items-center gap-2 shrink-0">
               {/* Bookmark Button */}
               <button
-                onClick={() => toggleBookmark(article)}
+                type="button"
+                onClick={handleBookmarkClick}
                 className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                   bookmarked
-                    ? "bg-rose-500 text-white border-rose-500"
+                    ? "bg-rose-500 text-white border-rose-500 shadow-sm"
                     : "bg-card-subtle text-on-surface-muted hover:text-on-surface border-divider"
                 }`}
                 title={bookmarked ? "Remove Bookmark" : "Save for later"}
                 aria-label="Bookmark article"
               >
-                <svg className="w-4 h-4" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                <svg
+                  className="w-4 h-4 transition-transform active:scale-125"
+                  fill={bookmarked ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                 </svg>
               </button>
 
               {/* Quick Read Drawer Trigger */}
               <button
+                type="button"
                 onClick={() => openReader(article)}
                 className="px-4 py-2.5 rounded-xl bg-on-surface text-card font-semibold text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-1.5"
               >

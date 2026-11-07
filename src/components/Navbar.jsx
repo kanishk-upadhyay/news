@@ -29,7 +29,7 @@ export default function Navbar() {
   });
 
   return (
-    <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-md border-b border-divider transition-colors">
+    <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-md border-b border-divider transition-colors">
       {/* Upper Masthead Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
         {/* Brand & Edition Date */}
@@ -58,6 +58,7 @@ export default function Navbar() {
             onClick={openSearch}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card-subtle border border-divider hover:border-rose-500/50 text-on-surface-muted hover:text-on-surface text-xs font-medium transition-all cursor-pointer"
             title="Search articles (⌘K)"
+            aria-label="Search articles"
           >
             <svg className="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -73,6 +74,7 @@ export default function Navbar() {
             onClick={() => setViewMode(viewMode === "magazine" ? "digest" : "magazine")}
             className="hidden sm:flex items-center justify-center p-2 rounded-xl bg-card-subtle border border-divider hover:border-divider/80 text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
             title={viewMode === "magazine" ? "Switch to Compact Digest" : "Switch to Magazine Grid"}
+            aria-label="Switch layout view"
           >
             {viewMode === "magazine" ? (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,34 +96,72 @@ export default function Navbar() {
                 : "bg-card-subtle border-divider text-on-surface hover:border-divider/80"
             }`}
             title="Saved Bookmarks"
+            aria-label="Saved Bookmarks"
           >
-            <svg className="w-4 h-4" fill={isBookmarksPage ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-4 h-4"
+              fill={isBookmarksPage || bookmarks.length > 0 ? "currentColor" : "none"}
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
             </svg>
             <span className="hidden sm:inline">Saved</span>
             {bookmarks.length > 0 && (
-              <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full font-bold ${
-                isBookmarksPage ? "bg-white text-rose-600" : "bg-rose-500 text-white"
-              }`}>
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold ${
+                  isBookmarksPage ? "bg-white text-rose-600" : "bg-rose-500 text-white"
+                }`}
+              >
                 {bookmarks.length}
               </span>
             )}
           </Link>
 
-          {/* Dark / Light Mode Toggle */}
+          {/* Geometrically Perfect Dark / Light Mode Toggle */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 rounded-xl bg-card-subtle border border-divider hover:border-divider/80 text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
-            aria-label="Toggle theme"
+            className="group p-2 rounded-xl bg-card-subtle border border-divider hover:border-divider/80 text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
+            aria-label={`Toggle theme: switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
             title={`Switch to ${theme === "dark" ? "Light" : "Dark"} Mode`}
           >
             {theme === "dark" ? (
-              <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              /* Flawless Symmetrical Sun Icon */
+              <svg
+                className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="4" fill="currentColor" fillOpacity="0.25" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              /* Flawless Symmetrical Moon Icon */
+              <svg
+                className="w-4 h-4 text-slate-700 group-hover:-rotate-12 transition-transform duration-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path
+                  d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
+                  fill="currentColor"
+                  fillOpacity="0.2"
+                />
               </svg>
             )}
           </button>
@@ -169,9 +209,30 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-divider bg-card px-4 py-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-on-surface-muted mb-2 px-1">
-            Categories
+        <div className="md:hidden border-t border-divider bg-card px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-200">
+          {/* Quick links: Bookmarks & View toggle */}
+          <div className="flex items-center justify-between pb-2 border-b border-divider">
+            <Link
+              to="/bookmarks"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-2 text-xs font-semibold text-rose-500 hover:opacity-80"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+              <span>Saved Articles ({bookmarks.length})</span>
+            </Link>
+
+            <button
+              onClick={() => setViewMode(viewMode === "magazine" ? "digest" : "magazine")}
+              className="text-xs text-on-surface-muted hover:text-on-surface font-medium"
+            >
+              Mode: {viewMode === "magazine" ? "Magazine" : "Digest"}
+            </button>
+          </div>
+
+          <div className="text-[11px] font-mono uppercase tracking-wider text-on-surface-muted px-1">
+            Desk Sections
           </div>
           <div className="grid grid-cols-2 gap-2">
             {CATEGORIES.map((cat) => {

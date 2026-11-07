@@ -36,7 +36,7 @@ export default function ReaderDrawer() {
   const byline = activeArticle.fields?.byline;
   const timeAgo = formatRelativeTime(activeArticle.webPublicationDate);
   const readTime = calculateReadTime(activeArticle.fields?.wordcount || description);
-  const bookmarked = isBookmarked(activeArticle.id || activeArticle.webUrl);
+  const bookmarked = isBookmarked(activeArticle);
 
   // Native Web Speech API Text-to-Speech
   const toggleSpeech = () => {
@@ -69,10 +69,9 @@ export default function ReaderDrawer() {
         });
         return;
       } catch {
-        // User cancelled or unsupported
+        // User cancelled
       }
     }
-    // Fallback: Copy link
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(activeArticle.webUrl);
       setCopied(true);
@@ -110,15 +109,17 @@ export default function ReaderDrawer() {
             {/* Font Size Selector */}
             <div className="flex items-center rounded-xl border border-divider bg-card p-0.5">
               <button
+                type="button"
                 onClick={() => setFontSize("normal")}
-                className={`px-2 py-1 text-xs rounded-lg font-semibold ${fontSize === "normal" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
+                className={`px-2 py-1 text-xs rounded-lg font-semibold cursor-pointer ${fontSize === "normal" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
                 title="Normal Text"
               >
                 A
               </button>
               <button
+                type="button"
                 onClick={() => setFontSize("large")}
-                className={`px-2 py-1 text-sm rounded-lg font-semibold ${fontSize === "large" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
+                className={`px-2 py-1 text-sm rounded-lg font-semibold cursor-pointer ${fontSize === "large" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
                 title="Large Text"
               >
                 A+
@@ -127,6 +128,7 @@ export default function ReaderDrawer() {
 
             {/* Audio Listen */}
             <button
+              type="button"
               onClick={toggleSpeech}
               className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 isPlayingAudio
@@ -144,23 +146,35 @@ export default function ReaderDrawer() {
               </svg>
             </button>
 
-            {/* Bookmark Toggle */}
+            {/* Bookmark Toggle with Label */}
             <button
-              onClick={() => toggleBookmark(activeArticle)}
-              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleBookmark(activeArticle);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 bookmarked
-                  ? "bg-rose-500 text-white border-rose-500"
+                  ? "bg-rose-500 text-white border-rose-500 shadow-sm"
                   : "bg-card border-divider text-on-surface-muted hover:text-on-surface"
               }`}
-              title={bookmarked ? "Bookmarked" : "Bookmark"}
+              title={bookmarked ? "Remove Bookmark" : "Save story"}
             >
-              <svg className="w-4 h-4" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              <svg
+                className="w-3.5 h-3.5"
+                fill={bookmarked ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
+              <span>{bookmarked ? "Saved" : "Save"}</span>
             </button>
 
             {/* Share / Copy */}
             <button
+              type="button"
               onClick={handleShare}
               className="p-2 rounded-xl border border-divider bg-card text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
               title="Share Article"
@@ -176,6 +190,7 @@ export default function ReaderDrawer() {
 
             {/* Close */}
             <button
+              type="button"
               onClick={closeReader}
               className="p-2 rounded-xl hover:bg-card-subtle text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
               aria-label="Close reader"

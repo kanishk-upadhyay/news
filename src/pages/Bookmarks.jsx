@@ -6,8 +6,9 @@ import { containerStyles, editorialHeadingStyles } from "../utils/styles";
 import { decodeHTML } from "../utils/textUtils";
 
 export default function Bookmarks() {
-  const { bookmarks, clearBookmarks, viewMode } = useApp();
+  const { bookmarks, removeBookmark, clearBookmarks, viewMode } = useApp();
   const [filterQuery, setFilterQuery] = useState("");
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const filteredBookmarks = bookmarks.filter((article) => {
     if (!filterQuery.trim()) return true;
@@ -37,7 +38,7 @@ export default function Bookmarks() {
 
           {/* Search Filter & Clear All */}
           {bookmarks.length > 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <div className="relative">
                 <input
                   type="text"
@@ -48,16 +49,36 @@ export default function Bookmarks() {
                 />
               </div>
 
-              <button
-                onClick={() => {
-                  if (confirm("Are you sure you want to clear all saved bookmarks?")) {
-                    clearBookmarks();
-                  }
-                }}
-                className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-card border border-divider text-rose-500 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
-              >
-                Clear All
-              </button>
+              {!showClearConfirm ? (
+                <button
+                  type="button"
+                  onClick={() => setShowClearConfirm(true)}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-card border border-divider text-rose-500 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
+                >
+                  Clear All
+                </button>
+              ) : (
+                <div className="flex items-center gap-1.5 bg-card border border-rose-500/40 p-1 rounded-xl">
+                  <span className="text-[11px] font-medium text-rose-500 px-1">Clear all?</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearBookmarks();
+                      setShowClearConfirm(false);
+                    }}
+                    className="px-2 py-0.5 text-xs font-bold rounded-lg bg-rose-500 text-white hover:bg-rose-600 transition-colors cursor-pointer"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowClearConfirm(false)}
+                    className="px-2 py-0.5 text-xs font-medium rounded-lg bg-card-subtle text-on-surface hover:bg-card-subtle/80 transition-colors cursor-pointer"
+                  >
+                    No
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </header>
@@ -74,7 +95,7 @@ export default function Bookmarks() {
               Your reading list is empty
             </h3>
             <p className="text-on-surface-muted max-w-md mx-auto text-sm sm:text-base mb-6">
-              Save articles while browsing to read them anytime, even when offline.
+              Bookmark stories while exploring the world feed to read them anytime, even offline.
             </p>
             <Link
               to="/"
@@ -100,6 +121,7 @@ export default function Bookmarks() {
                     key={article.id || article.webUrl}
                     article={article}
                     layout="magazine"
+                    onRemove={(art) => removeBookmark(art.id || art.webUrl)}
                   />
                 ))}
               </div>
@@ -110,6 +132,7 @@ export default function Bookmarks() {
                     key={article.id || article.webUrl}
                     article={article}
                     layout="digest"
+                    onRemove={(art) => removeBookmark(art.id || art.webUrl)}
                   />
                 ))}
               </div>
