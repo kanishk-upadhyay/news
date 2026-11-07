@@ -73,7 +73,7 @@ export default function HeroCard({ article }) {
             </h2>
 
             {/* Summary Excerpt */}
-            <p className="text-on-surface-muted text-sm sm:text-base leading-relaxed line-clamp-3 mb-6">
+            <p className="text-on-surface-muted text-sm sm:text-base leading-relaxed line-clamp-3 mb-6 text-pretty">
               {description || "Explore comprehensive coverage and on-the-ground reporting for this top global development."}
             </p>
           </div>

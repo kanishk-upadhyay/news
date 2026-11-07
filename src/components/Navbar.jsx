@@ -39,7 +39,7 @@ export default function Navbar() {
               <span className="font-serif text-2xl sm:text-3xl font-extrabold tracking-tight">
                 News<span className="text-rose-500">Hub</span>
               </span>
-              <span className="hidden xl:inline-block text-[10px] font-mono uppercase tracking-widest text-on-surface-muted border-l border-divider pl-2.5">
+              <span className="hidden xl:inline-block text-xs font-mono uppercase tracking-widest text-on-surface-muted border-l border-divider pl-2.5">
                 Dispatch
               </span>
             </Link>
@@ -83,7 +83,7 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <span className="hidden sm:inline">Search</span>
-              <kbd className="hidden lg:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded bg-card border border-divider">
+              <kbd className="hidden lg:inline-block text-xs font-mono px-1.5 py-0.5 rounded bg-card border border-divider">
                 ⌘K
               </kbd>
             </button>
@@ -136,7 +136,7 @@ export default function Navbar() {
               <span className="hidden sm:inline">Saved</span>
               {bookmarks.length > 0 && (
                 <span
-                  className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full font-bold ${
+                  className={`text-xs font-mono px-1.5 py-0.5 rounded-full font-bold ${
                     isBookmarksPage ? "bg-white text-rose-600" : "bg-rose-500 text-white"
                   }`}
                 >
@@ -236,7 +236,7 @@ export default function Navbar() {
               </button>
             </div>
 
-            <div className="text-[11px] font-mono uppercase tracking-wider text-on-surface-muted px-1">
+            <div className="text-xs font-mono uppercase tracking-wider text-on-surface-muted px-1">
               Sections
             </div>
             <div className="grid grid-cols-2 gap-2">

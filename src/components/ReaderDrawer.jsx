@@ -265,14 +265,14 @@ export default function ReaderDrawer() {
 
             {/* Lead Excerpt with Journalistic Drop-Cap */}
             <div className={`font-sans text-on-surface ${fontSizeClasses} mb-8 space-y-5`}>
-              <p className="editorial-drop-cap font-medium text-on-surface text-lg sm:text-xl leading-relaxed">
+              <p className="editorial-drop-cap font-medium text-on-surface text-lg sm:text-xl leading-relaxed text-pretty">
                 {description}
               </p>
 
               {activeArticle.fields?.bodyText ? (
                 <div className="space-y-5 pt-6 border-t border-divider text-on-surface-muted font-sans text-base sm:text-lg leading-relaxed">
                   {activeArticle.fields.bodyText.split("\n\n").map((para, idx) => (
-                    <p key={idx} className="text-on-surface/90">
+                    <p key={idx} className="text-on-surface/90 text-pretty">
                       {para}
                     </p>
                   ))}

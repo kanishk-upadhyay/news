@@ -187,10 +187,10 @@ export default function SearchModal() {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-rose-500">
+                      <span className="text-xs font-mono font-semibold uppercase tracking-wider text-rose-500">
                         {article.sectionName}
                       </span>
-                      <span className="text-[11px] text-on-surface-muted">
+                      <span className="text-xs text-on-surface-muted">
                         • {formatRelativeTime(article.webPublicationDate)}
                       </span>
                     </div>

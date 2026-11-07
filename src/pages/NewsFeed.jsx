@@ -226,25 +226,16 @@ export default function NewsFeed() {
                             </span>
                           </div>
                         ) : (
-                          <div className="flex flex-col items-center">
-                            {/* Animated icon circle */}
-                            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300 shadow-sm">
-                              <svg className="w-6 h-6 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
-                              </svg>
-                            </div>
-
-                            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-rose-500 mb-1.5">
-                              Next Batch
-                            </span>
-                            <h3 className="font-serif text-xl sm:text-2xl font-bold text-on-surface group-hover:text-rose-500 transition-colors mb-2">
-                              Load More Dispatches
+                          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8">
+                            <h3 className="font-serif text-2xl font-bold text-on-surface group-hover:text-rose-500 transition-colors mb-3 flex items-center gap-2">
+                              <span>Load More Dispatches</span>
+                              <span className="text-rose-500 transform group-hover:translate-x-1 transition-transform">→</span>
                             </h3>
-                            <p className="text-xs sm:text-sm text-on-surface-muted max-w-xs mb-5 leading-relaxed">
+                            <p className="text-sm text-on-surface-muted max-w-xs mb-6 leading-relaxed text-pretty">
                               Access the next 18 investigative reports and global updates in {currentCategoryMeta.label}.
                             </p>
 
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-card-subtle border border-divider text-on-surface-muted">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-card-subtle border border-divider text-on-surface-muted">
                               <span>Page {page} of {totalPages}</span>
                             </span>
                           </div>
@@ -253,15 +244,10 @@ export default function NewsFeed() {
                     ) : (
                       /* End of Edition Card: Completes the grid when all pages are viewed */
                       <div className="bg-card border border-divider rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[360px]">
-                        <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <h4 className="font-serif text-lg font-bold text-on-surface mb-1">
+                        <h4 className="font-serif text-xl font-bold text-on-surface mb-2">
                           You're All Caught Up
                         </h4>
-                        <p className="text-xs text-on-surface-muted max-w-xs mb-4">
+                        <p className="text-sm text-on-surface-muted max-w-xs mb-5 text-pretty">
                           You have reached the end of recent coverage in {currentCategoryMeta.label}.
                         </p>
                         <div className="flex flex-wrap gap-1.5 justify-center">
@@ -269,7 +255,7 @@ export default function NewsFeed() {
                             <Link
                               key={c.id}
                               to={`/category/${c.id}`}
-                              className="px-2.5 py-1 text-xs rounded-lg bg-card-subtle text-on-surface-muted hover:text-on-surface hover:bg-card border border-divider"
+                              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card-subtle text-on-surface-muted hover:text-on-surface hover:bg-card border border-divider"
                             >
                               {c.label} →
                             </Link>

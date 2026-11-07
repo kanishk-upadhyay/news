@@ -48,11 +48,11 @@ export default function NewsCard({ article, layout = "magazine", onRemove = null
             {title}
           </h3>
 
-          <p className="text-on-surface-muted text-xs sm:text-sm line-clamp-1 mb-2">
+          <p className="text-on-surface-muted text-sm line-clamp-1 mb-2 text-pretty">
             {description}
           </p>
 
-          <div className="text-[11px] text-on-surface-muted">
+          <div className="text-xs text-on-surface-muted">
             {byline ? `By ${byline}` : "NewsHub Desk"}
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function NewsCard({ article, layout = "magazine", onRemove = null
             }}
           />
           <div className="absolute top-3 left-3">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-black/75 backdrop-blur-sm text-white">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-black/75 backdrop-blur-sm text-white">
               {article.sectionName}
             </span>
           </div>
@@ -133,7 +133,7 @@ export default function NewsCard({ article, layout = "magazine", onRemove = null
             {title}
           </h3>
 
-          <p className="text-on-surface-muted text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
+          <p className="text-on-surface-muted text-sm line-clamp-3 leading-relaxed mb-4 text-pretty">
             {description || "Tap to read full summary and coverage."}
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function NewsCard({ article, layout = "magazine", onRemove = null
 
       {/* Footer / Controls */}
       <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-3 border-t border-divider/60 flex items-center justify-between gap-3">
-        <span className="text-[11px] text-on-surface-muted truncate">
+        <span className="text-xs text-on-surface-muted truncate">
           {byline ? `By ${byline}` : "NewsHub Desk"}
         </span>
 

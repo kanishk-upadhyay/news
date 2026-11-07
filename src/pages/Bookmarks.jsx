@@ -53,7 +53,7 @@ export default function Bookmarks() {
                 </button>
               ) : (
                 <div className="flex items-center gap-1.5 bg-card border border-rose-500/40 p-1 rounded-xl">
-                  <span className="text-[11px] font-medium text-rose-500 px-1">Clear all?</span>
+                  <span className="text-xs font-medium text-rose-500 px-1">Clear all?</span>
                   <button
                     type="button"
                     onClick={() => {
