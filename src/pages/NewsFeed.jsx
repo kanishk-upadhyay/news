@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { fetchNews } from "../api/NewsApi";
 import HeroCard from "../components/HeroCard";
 import NewsCard from "../components/NewsCard";
@@ -119,6 +119,7 @@ export default function NewsFeed() {
               {SORT_OPTIONS.map((opt) => (
                 <button
                   key={opt.id}
+                  type="button"
                   onClick={() => setSortBy(opt.id)}
                   className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                     sortBy === opt.id
@@ -160,6 +161,7 @@ export default function NewsFeed() {
               {error}
             </p>
             <button
+              type="button"
               onClick={() => {
                 setLoading(true);
                 setError(null);
@@ -186,7 +188,7 @@ export default function NewsFeed() {
         {/* Loaded Editorial Content */}
         {!loading && !error && articles.length > 0 && (
           <div>
-            {/* When in Magazine View: Lead Hero Story + Grid */}
+            {/* When in Magazine View: Lead Hero Story + Perfectly Aligned Grid */}
             {viewMode === "magazine" ? (
               <>
                 {leadStory && <HeroCard article={leadStory} />}
@@ -200,11 +202,92 @@ export default function NewsFeed() {
                         layout="magazine"
                       />
                     ))}
+
+                    {/* In-Grid Load More Card — Fills the final slot seamlessly with zero empty space */}
+                    {page < totalPages ? (
+                      <div
+                        onClick={handleLoadMore}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleLoadMore();
+                          }
+                        }}
+                        className="group bg-card border border-divider hover:border-rose-500/80 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 min-h-[360px] relative overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-rose-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+                        {loadingMore ? (
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
+                              <div className="w-6 h-6 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                            </div>
+                            <span className="font-serif text-lg font-bold text-on-surface">
+                              Retrieving Stories...
+                            </span>
+                            <span className="text-xs font-mono text-on-surface-muted">
+                              Fetching edition {page + 1}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            {/* Animated icon circle */}
+                            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300 shadow-sm">
+                              <svg className="w-6 h-6 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
+                              </svg>
+                            </div>
+
+                            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-rose-500 mb-1.5">
+                              Next Batch
+                            </span>
+                            <h3 className="font-serif text-xl sm:text-2xl font-bold text-on-surface group-hover:text-rose-500 transition-colors mb-2">
+                              Load More Dispatches
+                            </h3>
+                            <p className="text-xs sm:text-sm text-on-surface-muted max-w-xs mb-5 leading-relaxed">
+                              Access the next 18 investigative reports and global updates in {currentCategoryMeta.label}.
+                            </p>
+
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-card-subtle border border-divider text-on-surface-muted">
+                              <span>Page {page} of {totalPages}</span>
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* End of Edition Card: Completes the grid when all pages are viewed */
+                      <div className="bg-card border border-divider rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[360px]">
+                        <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <h4 className="font-serif text-lg font-bold text-on-surface mb-1">
+                          You're All Caught Up
+                        </h4>
+                        <p className="text-xs text-on-surface-muted max-w-xs mb-4">
+                          You have reached the end of recent coverage in {currentCategoryMeta.label}.
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 justify-center">
+                          {CATEGORIES.filter((c) => c.id !== category).slice(0, 3).map((c) => (
+                            <Link
+                              key={c.id}
+                              to={`/category/${c.id}`}
+                              className="px-2.5 py-1 text-xs rounded-lg bg-card-subtle text-on-surface-muted hover:text-on-surface hover:bg-card border border-divider"
+                            >
+                              {c.label} →
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </>
             ) : (
-              /* When in Digest View: Fast Scanning List */
+              /* When in Digest View: Streamlined List with Clean Load More Bar */
               <div className="space-y-4">
                 {articles.map((article) => (
                   <NewsCard
@@ -213,31 +296,29 @@ export default function NewsFeed() {
                     layout="digest"
                   />
                 ))}
-              </div>
-            )}
 
-            {/* Load More Pagination */}
-            {page < totalPages && (
-              <div className="text-center mt-12 sm:mt-16">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={loadingMore}
-                  className="px-8 py-3.5 rounded-2xl bg-card border border-divider hover:border-rose-500 font-semibold text-sm text-on-surface shadow-sm hover:shadow-md transition-all cursor-pointer inline-flex items-center gap-2.5 disabled:opacity-50"
-                >
-                  {loadingMore ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
-                      <span>Retrieving Stories...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Load Next 18 Dispatches</span>
-                      <span className="text-xs font-mono text-on-surface-muted">
-                        (Page {page} of {totalPages})
-                      </span>
-                    </>
-                  )}
-                </button>
+                {page < totalPages && (
+                  <button
+                    type="button"
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                    className="w-full py-4 rounded-2xl bg-card border border-divider hover:border-rose-500 font-semibold text-sm text-on-surface shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-2.5 disabled:opacity-50"
+                  >
+                    {loadingMore ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                        <span>Retrieving Stories...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Load Next 18 Dispatches</span>
+                        <span className="text-xs font-mono text-on-surface-muted">
+                          (Page {page} of {totalPages})
+                        </span>
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             )}
           </div>

@@ -124,6 +124,22 @@ export default function Bookmarks() {
                     onRemove={(art) => removeBookmark(art.id || art.webUrl)}
                   />
                 ))}
+
+                {/* Add Story / Explore Tile to complete the row */}
+                <Link
+                  to="/"
+                  className="group bg-card border border-dashed border-divider hover:border-rose-500/80 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 min-h-[360px]"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all shadow-sm">
+                    <span className="text-2xl font-bold">+</span>
+                  </div>
+                  <h3 className="font-serif text-xl font-bold text-on-surface group-hover:text-rose-500 transition-colors mb-1">
+                    Discover More Stories
+                  </h3>
+                  <p className="text-xs text-on-surface-muted max-w-xs leading-relaxed">
+                    Explore top journalism across world, technology, science, and business to expand your reading list.
+                  </p>
+                </Link>
               </div>
             ) : (
               <div className="space-y-4">
