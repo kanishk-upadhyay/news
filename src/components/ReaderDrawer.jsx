@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useApp } from "../context/useApp";
 import { decodeHTML, cleanDescription, formatRelativeTime, calculateReadTime } from "../utils/textUtils";
 
@@ -7,6 +7,8 @@ export default function ReaderDrawer() {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [fontSize, setFontSize] = useState("normal"); // 'normal' | 'large' | 'xl'
   const [copied, setCopied] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollRef = useRef(null);
 
   // Stop speech when component unmounts or activeArticle closes
   useEffect(() => {
@@ -27,6 +29,16 @@ export default function ReaderDrawer() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeArticle, closeReader]);
+
+  // Track scroll progress
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+    const total = scrollHeight - clientHeight;
+    if (total > 0) {
+      setScrollProgress(Math.min(100, Math.round((scrollTop / total) * 100)));
+    }
+  };
 
   if (!activeArticle) return null;
 
@@ -80,8 +92,8 @@ export default function ReaderDrawer() {
   };
 
   const fontSizeClasses = {
-    normal: "text-base sm:text-lg leading-relaxed",
-    large: "text-lg sm:text-xl leading-relaxed",
+    normal: "text-base sm:text-lg leading-relaxed sm:leading-8",
+    large: "text-lg sm:text-xl leading-relaxed sm:leading-9",
     xl: "text-xl sm:text-2xl leading-loose",
   }[fontSize];
 
@@ -89,15 +101,21 @@ export default function ReaderDrawer() {
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 lg:p-8 bg-black/75 backdrop-blur-md transition-all animate-in fade-in duration-200"
       onClick={closeReader}
     >
       <div
-        className="w-full max-w-2xl bg-card h-full shadow-2xl flex flex-col overflow-hidden border-l border-divider animate-in slide-in-from-right duration-300"
+        className="w-full max-w-3xl bg-card border border-divider rounded-3xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drawer Header Controls */}
-        <div className="px-6 py-4 border-b border-divider flex items-center justify-between gap-4 bg-card-subtle/50">
+        {/* Reading Progress Line */}
+        <div
+          className="h-1 bg-rose-500 transition-all duration-150 absolute top-0 left-0 z-20"
+          style={{ width: `${scrollProgress}%` }}
+        />
+
+        {/* Centered Reader Header Bar */}
+        <div className="px-6 py-4 border-b border-divider flex items-center justify-between gap-4 bg-card-subtle/50 shrink-0">
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-rose-500/10 text-rose-500 border border-rose-500/20">
               {activeArticle.sectionName}
@@ -105,22 +123,30 @@ export default function ReaderDrawer() {
             <span className="text-xs text-on-surface-muted font-mono">• {readTime}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-2">
             {/* Font Size Selector */}
             <div className="flex items-center rounded-xl border border-divider bg-card p-0.5">
               <button
                 type="button"
                 onClick={() => setFontSize("normal")}
-                className={`px-2 py-1 text-xs rounded-lg font-semibold cursor-pointer ${fontSize === "normal" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
-                title="Normal Text"
+                className={`px-2.5 py-1 text-xs rounded-lg font-semibold cursor-pointer ${
+                  fontSize === "normal"
+                    ? "bg-on-surface text-card shadow-sm"
+                    : "text-on-surface-muted hover:text-on-surface"
+                }`}
+                title="Normal Reading Size"
               >
                 A
               </button>
               <button
                 type="button"
                 onClick={() => setFontSize("large")}
-                className={`px-2 py-1 text-sm rounded-lg font-semibold cursor-pointer ${fontSize === "large" ? "bg-on-surface text-card" : "text-on-surface-muted"}`}
-                title="Large Text"
+                className={`px-2.5 py-1 text-sm rounded-lg font-semibold cursor-pointer ${
+                  fontSize === "large"
+                    ? "bg-on-surface text-card shadow-sm"
+                    : "text-on-surface-muted hover:text-on-surface"
+                }`}
+                title="Large Reading Size"
               >
                 A+
               </button>
@@ -136,6 +162,7 @@ export default function ReaderDrawer() {
                   : "bg-card border-divider text-on-surface-muted hover:text-on-surface"
               }`}
               title={isPlayingAudio ? "Stop Audio" : "Listen (Text-to-Speech)"}
+              aria-label="Listen to article"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isPlayingAudio ? (
@@ -146,7 +173,7 @@ export default function ReaderDrawer() {
               </svg>
             </button>
 
-            {/* Bookmark Toggle with Label */}
+            {/* Bookmark Toggle */}
             <button
               type="button"
               onClick={(e) => {
@@ -202,73 +229,81 @@ export default function ReaderDrawer() {
           </div>
         </div>
 
-        {/* Scrollable Reader Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-10">
-          {/* Metadata */}
-          <div className="flex items-center gap-2 text-xs font-mono text-on-surface-muted mb-3">
-            <span>Published {timeAgo}</span>
-            {byline && (
-              <>
-                <span>•</span>
-                <span>By {byline}</span>
-              </>
-            )}
-          </div>
-
-          {/* Title */}
-          <h1 className="font-serif text-2xl sm:text-4xl font-extrabold tracking-tight text-on-surface mb-6 leading-tight">
-            {title}
-          </h1>
-
-          {/* Thumbnail */}
-          {activeArticle.fields?.thumbnail && (
-            <div className="mb-6 rounded-2xl overflow-hidden border border-divider">
-              <img
-                src={activeArticle.fields.thumbnail}
-                alt={title}
-                className="w-full h-auto max-h-80 object-cover"
-              />
+        {/* Scrollable Centered Article Reading Room */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto px-6 py-8 sm:px-12 sm:py-10"
+        >
+          <div className="max-w-2xl mx-auto">
+            {/* Metadata Line */}
+            <div className="flex items-center gap-2 text-xs font-mono text-on-surface-muted mb-3">
+              <span>Published {timeAgo}</span>
+              {byline && (
+                <>
+                  <span>•</span>
+                  <span>By <strong className="text-on-surface font-semibold">{byline}</strong></span>
+                </>
+              )}
             </div>
-          )}
 
-          {/* Lead Excerpt */}
-          <div className={`font-serif text-on-surface ${fontSizeClasses} mb-6 space-y-4`}>
-            <p className="font-medium text-rose-500/90 dark:text-rose-400">
-              {description}
-            </p>
+            {/* Journalistic Headline */}
+            <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-6 leading-tight">
+              {title}
+            </h1>
 
-            {activeArticle.fields?.bodyText ? (
-              <div className="space-y-4 pt-4 border-t border-divider text-on-surface-muted font-sans text-base leading-relaxed">
-                {activeArticle.fields.bodyText.split("\n\n").map((para, idx) => (
-                  <p key={idx}>{para}</p>
-                ))}
+            {/* High-Res Hero Thumbnail */}
+            {activeArticle.fields?.thumbnail && (
+              <div className="mb-8 rounded-2xl overflow-hidden border border-divider shadow-sm bg-card-subtle">
+                <img
+                  src={activeArticle.fields.thumbnail}
+                  alt={title}
+                  className="w-full h-auto max-h-96 object-cover"
+                />
               </div>
-            ) : (
-              <p className="text-on-surface-muted font-sans text-sm italic">
-                For the full investigative report, comprehensive multimedia, and commentary, visit the original publication.
-              </p>
             )}
-          </div>
 
-          {/* External Callout Card */}
-          <div className="mt-8 p-6 rounded-2xl bg-card-subtle border border-divider text-center">
-            <h4 className="font-serif text-lg font-bold text-on-surface mb-2">
-              Continue reading at The Guardian
-            </h4>
-            <p className="text-xs text-on-surface-muted mb-4">
-              Access full photojournalism, interactive charts, and live community discussions.
-            </p>
-            <a
-              href={activeArticle.webUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-on-surface text-card font-semibold text-sm hover:opacity-90 transition-opacity"
-            >
-              <span>Open on theguardian.com</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
+            {/* Lead Excerpt with Journalistic Drop-Cap */}
+            <div className={`font-sans text-on-surface ${fontSizeClasses} mb-8 space-y-5`}>
+              <p className="editorial-drop-cap font-medium text-on-surface text-lg sm:text-xl leading-relaxed">
+                {description}
+              </p>
+
+              {activeArticle.fields?.bodyText ? (
+                <div className="space-y-5 pt-6 border-t border-divider text-on-surface-muted font-sans text-base sm:text-lg leading-relaxed">
+                  {activeArticle.fields.bodyText.split("\n\n").map((para, idx) => (
+                    <p key={idx} className="text-on-surface/90">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-on-surface-muted font-sans text-sm italic pt-4 border-t border-divider">
+                  For the full investigative report, comprehensive multimedia, and community commentary, view the original publication below.
+                </p>
+              )}
+            </div>
+
+            {/* Editorial Attribution & Outbound Banner */}
+            <div className="mt-10 p-6 rounded-2xl bg-card-subtle border border-divider text-center">
+              <h4 className="font-serif text-lg font-bold text-on-surface mb-2">
+                Continue reading at The Guardian
+              </h4>
+              <p className="text-xs text-on-surface-muted mb-4 max-w-md mx-auto">
+                Access interactive data visualizations, photojournalism essays, and live community discussions.
+              </p>
+              <a
+                href={activeArticle.webUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-on-surface text-card font-semibold text-sm hover:opacity-90 transition-opacity"
+              >
+                <span>Open on theguardian.com</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
