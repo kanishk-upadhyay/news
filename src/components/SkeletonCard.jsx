@@ -1,28 +1,45 @@
-function SkeletonCard() {
+export default function SkeletonCard({ variant = "card" }) {
+  if (variant === "hero") {
+    return (
+      <div className="bg-card border border-divider rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0 mb-8 sm:mb-12 shadow-sm">
+        <div className="lg:col-span-7 h-64 sm:h-80 lg:h-96 animate-shimmer"></div>
+        <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div className="w-24 h-5 rounded-full animate-shimmer mb-4"></div>
+            <div className="w-full h-8 rounded-lg animate-shimmer mb-3"></div>
+            <div className="w-3/4 h-8 rounded-lg animate-shimmer mb-6"></div>
+            <div className="w-full h-4 rounded animate-shimmer mb-2"></div>
+            <div className="w-5/6 h-4 rounded animate-shimmer mb-2"></div>
+            <div className="w-2/3 h-4 rounded animate-shimmer mb-6"></div>
+          </div>
+          <div className="flex items-center justify-between pt-4 border-t border-divider">
+            <div className="w-32 h-4 rounded animate-shimmer"></div>
+            <div className="w-20 h-8 rounded-xl animate-shimmer"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="surface elevation-1 shape-lg overflow-hidden flex flex-col">
-      {/* Image skeleton */}
-      <div className="w-full h-40 sm:h-48 md:h-52 animate-shimmer"></div>
-
-      <div className="p-4 sm:p-5 md:p-6 flex flex-col grow">
-        {/* Title skeleton - 2 lines */}
-        <div className="mb-2 sm:mb-3">
-          <div className="h-5 sm:h-6 animate-shimmer rounded w-full mb-2"></div>
-          <div className="h-5 sm:h-6 animate-shimmer rounded w-3/4"></div>
+    <div className="bg-card border border-divider rounded-2xl overflow-hidden flex flex-col shadow-sm">
+      <div className="w-full h-44 sm:h-52 animate-shimmer"></div>
+      <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-20 h-4 rounded-full animate-shimmer"></div>
+            <div className="w-16 h-3 rounded animate-shimmer"></div>
+          </div>
+          <div className="w-full h-5 rounded animate-shimmer mb-2"></div>
+          <div className="w-4/5 h-5 rounded animate-shimmer mb-4"></div>
+          <div className="w-full h-3.5 rounded animate-shimmer mb-2"></div>
+          <div className="w-2/3 h-3.5 rounded animate-shimmer mb-4"></div>
         </div>
-
-        {/* Description skeleton - 3 lines */}
-        <div className="mb-4 sm:mb-6 grow">
-          <div className="h-4 animate-shimmer rounded w-full mb-2"></div>
-          <div className="h-4 animate-shimmer rounded w-full mb-2"></div>
-          <div className="h-4 animate-shimmer rounded w-2/3"></div>
+        <div className="flex items-center justify-between pt-4 border-t border-divider/60">
+          <div className="w-20 h-3 rounded animate-shimmer"></div>
+          <div className="w-8 h-8 rounded-full animate-shimmer"></div>
         </div>
-
-        {/* Button skeleton */}
-        <div className="h-10 sm:h-11 animate-shimmer shape-md"></div>
       </div>
     </div>
   );
 }
-
-export default SkeletonCard;

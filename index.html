@@ -1,13 +1,49 @@
 <!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>News</title>
-    </head>
-    <body>
-        <div id="root"></div>
-        <script type="module" src="./src/main.jsx"></script>
-    </body>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NewsHub — Curated Global Journalism & Breaking News</title>
+
+    <meta
+      name="description"
+      content="Real-time global news feed featuring curated editorial layouts, fast search, in-app reading mode, and offline bookmarks."
+    />
+    <meta name="author" content="Kanishk Upadhyay" />
+    <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kanishk-upadhyay.github.io/news/" />
+    <meta property="og:title" content="NewsHub — Curated Global Journalism & Breaking News" />
+    <meta
+      property="og:description"
+      content="Real-time global news feed featuring curated editorial layouts, fast search, in-app reading mode, and offline bookmarks."
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://kanishk-upadhyay.github.io/news/" />
+    <meta property="twitter:title" content="NewsHub — Curated Global Journalism" />
+    <meta
+      property="twitter:description"
+      content="Real-time global news feed with editorial layouts, in-app reader, and search."
+    />
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <!-- Google Fonts: Newsreader (Editorial Serif) + Plus Jakarta Sans (Modern Clean UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-surface text-on-surface antialiased selection:bg-rose-500 selection:text-white min-h-screen transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="./src/main.jsx"></script>
+  </body>
 </html>
