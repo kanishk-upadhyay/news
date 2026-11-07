@@ -16,6 +16,9 @@ export default function Navbar() {
   } = useApp();
 
   const isCurrentCategory = (catId) => {
+    if (catId === "world") {
+      return location.pathname === "/" || location.pathname === "/category/world";
+    }
     return location.pathname === `/category/${catId}`;
   };
 
@@ -49,10 +52,11 @@ export default function Navbar() {
           >
             {CATEGORIES.map((cat) => {
               const active = isCurrentCategory(cat.id);
+              const target = cat.id === "world" ? "/" : `/category/${cat.id}`;
               return (
                 <Link
                   key={cat.id}
-                  to={`/category/${cat.id}`}
+                  to={target}
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${
                     active
                       ? "bg-on-surface text-card shadow-sm font-bold"
@@ -238,10 +242,11 @@ export default function Navbar() {
             <div className="grid grid-cols-2 gap-2">
               {CATEGORIES.map((cat) => {
                 const active = isCurrentCategory(cat.id);
+                const target = cat.id === "world" ? "/" : `/category/${cat.id}`;
                 return (
                   <Link
                     key={cat.id}
-                    to={`/category/${cat.id}`}
+                    to={target}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`px-3 py-2 rounded-xl text-xs font-semibold capitalize transition-all ${
                       active

@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { AppProvider } from "./context/AppContext";
 import BreakingTicker from "./components/BreakingTicker";
@@ -33,10 +33,7 @@ function AppContent() {
       {/* Main Content View */}
       <div className="flex-1">
         <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={`/category/${NEWS_CONFIG.DEFAULT_CATEGORY}`} replace />}
-          />
+          <Route path="/" element={<NewsFeed />} />
           <Route path="/category/:category" element={<NewsFeed />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -71,7 +68,7 @@ function AppContent() {
                 {CATEGORIES.map((cat) => (
                   <Link
                     key={cat.id}
-                    to={`/category/${cat.id}`}
+                    to={cat.id === "world" ? "/" : `/category/${cat.id}`}
                     className="text-on-surface-muted hover:text-rose-500 transition-colors"
                   >
                     {cat.label}
@@ -129,10 +126,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename="/news">
       <AppProvider>
         <AppContent />
       </AppProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
