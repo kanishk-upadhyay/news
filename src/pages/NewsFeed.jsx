@@ -98,12 +98,6 @@ export default function NewsFeed() {
         {/* Section Masthead Header */}
         <header className="mb-8 sm:mb-12 border-b border-divider pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-rose-500">
-                Desk Section
-              </span>
-            </div>
             <h1 className={editorialHeadingStyles}>{currentCategoryMeta.label}</h1>
             <p className="text-on-surface-muted text-sm sm:text-base mt-2 max-w-2xl">
               {currentCategoryMeta.description}

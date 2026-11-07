@@ -43,9 +43,8 @@ export default function HeroCard({ article }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent lg:hidden pointer-events-none" />
 
           {/* Lead Story Badge */}
-          <div className="absolute top-4 left-4 flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 text-white shadow-md flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+          <div className="absolute top-4 left-4">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 text-white shadow-md">
               Lead Story
             </span>
           </div>

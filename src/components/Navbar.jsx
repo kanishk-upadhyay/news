@@ -237,7 +237,7 @@ export default function Navbar() {
             </div>
 
             <div className="text-[11px] font-mono uppercase tracking-wider text-on-surface-muted px-1">
-              Desk Sections
+              Sections
             </div>
             <div className="grid grid-cols-2 gap-2">
               {CATEGORIES.map((cat) => {

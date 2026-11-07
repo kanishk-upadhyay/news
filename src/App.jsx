@@ -62,7 +62,7 @@ function AppContent() {
             {/* Quick sections */}
             <div className="md:col-span-4">
               <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-on-surface mb-3">
-                Desk Sections
+                Sections
               </h4>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {CATEGORIES.map((cat) => (
