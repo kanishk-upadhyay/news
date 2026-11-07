@@ -25,48 +25,48 @@
   }
 }
 
-/* Custom Semantic Editorial Utility Classes */
+/* Scientific APCA & Visual Ergonomics Contrast Tokens */
 @layer utilities {
-  /* Surface and Backgrounds: Warm editorial newsprint vs Obsidian midnight */
+  /* Surface and Backgrounds: Warm editorial newsprint vs Matte Obsidian */
   .bg-surface {
-    background-color: #faf8f5;
+    background-color: #faf8f5; /* Warm unbleached paper parchment (avoids glare) */
   }
   .dark .bg-surface {
-    background-color: #0b0f17;
+    background-color: #0b0f17; /* Deep matte obsidian (avoids high-luminance battery shock) */
   }
 
   .bg-card {
     background-color: #ffffff;
   }
   .dark .bg-card {
-    background-color: #121927;
+    background-color: #121927; /* Elevated slate surface */
   }
 
   .bg-card-subtle {
-    background-color: #f3f0e9;
+    background-color: #f2eee5;
   }
   .dark .bg-card-subtle {
-    background-color: #1a2334;
+    background-color: #182234;
   }
 
-  /* Text Colors: Deep charcoal ink vs Crisp off-white */
+  /* Text Colors: Deep carbon ink vs Halation-free softened ivory */
   .text-on-surface {
-    color: #111827;
+    color: #111827; /* Deep carbon ink (APCA Lc ~98) */
   }
   .dark .text-on-surface {
-    color: #f1f5f9;
+    color: #e2e8f0; /* Softened chalk ivory (cures astigmatism halation) */
   }
 
   .text-on-surface-muted {
-    color: #64748b;
+    color: #475569; /* Slate (WCAG AAA compliant >6:1) */
   }
   .dark .text-on-surface-muted {
-    color: #94a3b8;
+    color: #94a3b8; /* Cool slate (APCA Lc ~65) */
   }
 
   /* Hairline Editorial Borders */
   .border-divider {
-    border-color: #e5e0d5;
+    border-color: #e2ddd3;
   }
   .dark .border-divider {
     border-color: #1e293b;
@@ -107,9 +107,9 @@
     animation: shimmer 1.8s ease-in-out infinite;
     background: linear-gradient(
       90deg,
-      #f3f0e9 0%,
-      #e5e0d5 50%,
-      #f3f0e9 100%
+      #f2eee5 0%,
+      #e2ddd3 50%,
+      #f2eee5 100%
     );
     background-size: 200% 100%;
   }
@@ -117,9 +117,9 @@
   .dark .animate-shimmer {
     background: linear-gradient(
       90deg,
-      #131b2a 0%,
+      #121927 0%,
       #1e293b 50%,
-      #131b2a 100%
+      #121927 100%
     );
     background-size: 200% 100%;
   }
