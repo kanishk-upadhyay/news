@@ -8,7 +8,7 @@ export default function Navbar() {
   const location = useLocation();
   const {
     theme,
-    setTheme,
+    toggleTheme,
     bookmarks,
     openSearch,
     viewMode,
@@ -118,15 +118,14 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Geometrically Perfect Dark / Light Mode Toggle */}
+          {/* Symmetrical Dark / Light Mode Toggle */}
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={toggleTheme}
             className="group p-2 rounded-xl bg-card-subtle border border-divider hover:border-divider/80 text-on-surface-muted hover:text-on-surface transition-all cursor-pointer"
             aria-label={`Toggle theme: switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
             title={`Switch to ${theme === "dark" ? "Light" : "Dark"} Mode`}
           >
             {theme === "dark" ? (
-              /* Flawless Symmetrical Sun Icon */
               <svg
                 className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300"
                 viewBox="0 0 24 24"
@@ -147,7 +146,6 @@ export default function Navbar() {
                 <path d="m19.07 4.93-1.41 1.41" />
               </svg>
             ) : (
-              /* Flawless Symmetrical Moon Icon */
               <svg
                 className="w-4 h-4 text-slate-700 group-hover:-rotate-12 transition-transform duration-300"
                 viewBox="0 0 24 24"

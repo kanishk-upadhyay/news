@@ -23,9 +23,28 @@ const sanitizeBookmark = (article) => {
 };
 
 export const AppProvider = ({ children }) => {
-  // Theme state ('dark' | 'light' | 'system')
+  // Theme state: defaults to device's OS preference if no manual override is saved
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("newshub_theme") || "dark";
+    try {
+      const saved = localStorage.getItem("newshub_theme");
+      if (saved === "dark" || saved === "light") {
+        return saved;
+      }
+      // Automatically detect device system preference
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return prefersDark ? "dark" : "light";
+    } catch {
+      return "dark";
+    }
+  });
+
+  // Track if user explicitly clicked toggle to override system theme
+  const [hasManualOverride, setHasManualOverride] = useState(() => {
+    try {
+      return !!localStorage.getItem("newshub_theme");
+    } catch {
+      return false;
+    }
   });
 
   // Bookmarks state
@@ -55,21 +74,44 @@ export const AppProvider = ({ children }) => {
     return localStorage.getItem("newshub_view_mode") || "magazine";
   });
 
-  // Sync theme with document element
+  // Synchronize document class with active theme
   useEffect(() => {
     const root = document.documentElement;
-    const isDark =
-      theme === "dark" ||
-      (theme === "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-
-    if (isDark) {
+    if (theme === "dark") {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
-    localStorage.setItem("newshub_theme", theme);
   }, [theme]);
+
+  // Listen to live OS system theme changes if user has not set a permanent override
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleSystemThemeChange = (e) => {
+      // If user hasn't explicitly locked a theme, follow the device
+      if (!localStorage.getItem("newshub_theme")) {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener("change", handleSystemThemeChange);
+  }, []);
+
+  // Update theme manually (and save preference)
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("newshub_theme", next);
+      } catch (e) {
+        console.warn("Could not save theme to localStorage", e);
+      }
+      setHasManualOverride(true);
+      return next;
+    });
+  }, []);
 
   // Sync bookmarks with localStorage whenever bookmarks change
   useEffect(() => {
@@ -165,6 +207,8 @@ export const AppProvider = ({ children }) => {
       value={{
         theme,
         setTheme,
+        toggleTheme,
+        hasManualOverride,
         bookmarks,
         isBookmarked,
         toggleBookmark,
